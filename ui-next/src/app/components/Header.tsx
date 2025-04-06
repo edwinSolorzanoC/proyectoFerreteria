@@ -79,11 +79,11 @@ export default function Header() {
             </button>
             {openDropdown === "facturacion" && (
               <div className="absolute z-10 left-0 mt-2 w-48 bg-white shadow-lg rounded-lg text-black">
-                <Link href="/facturacion/nueva" className="block px-4 py-2 hover:bg-gray-100">
-                por_terminar_1
+                <Link href="/facturas/generar" className="block px-4 py-2 hover:bg-gray-100">
+                Facturar
                 </Link>
-                <Link href="/facturacion/historial" className="block px-4 py-2 hover:bg-gray-100">
-                por_terminar_2
+                <Link href="/facturas/verfacturas" className="block px-4 py-2 hover:bg-gray-100">
+                Ver Facturas
                 </Link>
               </div>
             )}
