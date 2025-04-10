@@ -4,6 +4,8 @@ const productoRoutes = require("./routes/productoRoutes"); // 👈 Nuevo
 const proveedorRoutes = require("./routes/proveedorRoutes");
 const reporteRoutes = require("./routes/reporteRoutes"); // 👈 Nuevo
 const authRoutes = require("./routes/authRoutes"); // 👈 Nuevo
+const ventaRoute = require("./routes/ventaRoutes"); // 👈 Nuevo
+const facturaRoute = require("./routes/facturaRoutes"); // 👈 Nuevo
 
 const app = express();
 
@@ -15,6 +17,8 @@ app.use("/api/productos", productoRoutes); // 👈 Nuevo
 app.use("/api/proveedores", proveedorRoutes); // 👈 Nuevo
 app.use("/api/reportes", reporteRoutes); // 👈 Nuevo
 app.use("/api/auth", authRoutes); // 👈 Nuevo
+app.use("/api/ventas", ventaRoute); // 👈 Nuevo
+app.use("/api/factura", facturaRoute); // 👈 Nuevo
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
