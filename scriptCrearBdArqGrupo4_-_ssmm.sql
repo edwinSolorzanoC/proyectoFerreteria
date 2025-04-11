@@ -117,3 +117,20 @@ BEGIN
   FROM inserted;
 END;
 GO
+
+-- Trigger actualizar stock después de insertar en detalles_facturas
+CREATE TRIGGER tr_descuento_stock
+ON detalles_facturas
+AFTER INSERT
+AS
+BEGIN
+    -- Evitar errores de muchos inserts a la vez
+    SET NOCOUNT ON;
+
+    -- Actualiza el stock de los productos afectados
+    UPDATE p
+    SET p.cantidad_stock = p.cantidad_stock - i.cantidad
+    FROM productos p
+    INNER JOIN inserted i ON p.id_producto = i.productos_id_producto;
+END;
+GO
