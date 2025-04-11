@@ -41,11 +41,7 @@ const getHistorialCompras = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-module.exports = {
-  getHistorialCompras,
-};
-=======
+
 const getReporteProductos = async (req, res) => {
   try {
     const pool = await poolPromise;
@@ -64,5 +60,4 @@ const getReporteProductos = async (req, res) => {
   }
 }
 
-module.exports = { getReporte, getReporteProductos };
->>>>>>> 25bcb9033499242073a954aa8ac207799080aff5
+module.exports = {  getReporteProductos, getHistorialCompras };
