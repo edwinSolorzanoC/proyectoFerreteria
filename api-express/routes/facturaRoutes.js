@@ -1,10 +1,10 @@
 const express = require("express");
-const { getFacturaById, postFactura } = require("../controllers/facturaController");
+const { getFacturaById, getFacturaByClienteId } = require("../controllers/facturaController");
 
 const router = express.Router();
 
 router.get('/:id', getFacturaById);
-router.post('/', postFactura);
+router.get('/cliente/:id', getFacturaByClienteId);
 
 
 module.exports = router;
