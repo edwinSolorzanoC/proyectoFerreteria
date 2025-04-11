@@ -113,11 +113,11 @@ export default function Header() {
             </button>
             {openDropdown === "estadisticas" && (
               <div className="absolute z-10 left-0 mt-2 w-48 bg-white shadow-lg rounded-lg text-black">
-                <Link href="/estadisticas/ventas" className="block px-4 py-2 hover:bg-gray-100">
-                  por_terminar_1
+                <Link href="/estadisticas/reportes" className="block px-4 py-2 hover:bg-gray-100">
+                  Reporte Ventas
                 </Link>
-                <Link href="/estadisticas/inventario" className="block px-4 py-2 hover:bg-gray-100">
-                por_terminar_2
+                <Link href="/estadisticas/analisis" className="block px-4 py-2 hover:bg-gray-100">
+                Analisis
                 </Link>
               </div>
             )}
