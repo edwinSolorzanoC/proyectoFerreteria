@@ -1,5 +1,5 @@
 
-import Header from "../../components/Header";
+import Header from "../../../components/Header";
 
 const productos = [
     { id: 1, nombre: "Martillo", precio: 10.99, cantidad: 50, proveedor: "Herramientas Suarez S.A" },
