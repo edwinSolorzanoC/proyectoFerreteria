@@ -1,43 +1,46 @@
 const { poolPromise } = require("../db/config");
 
-// Obtener reporte diario, semanal o mensual
-const getReporte = async (req, res) => {
-  const { query } = req.query;  // Obtenemos el parámetro "query" de la consulta
+// Obtener historial de compras con filtro por día, semana, mes o por ID de cliente
+const getHistorialCompras = async (req, res) => {
+  const { tipo } = req.query; // 'tipo' para dia, semana, mes
+  const { id } = req.params; // id del cliente desde la URL
 
-  if (!query) {
-    return res.status(400).json({ error: 'Por favor, proporciona el parámetro "query" (diarias, semanales o mensual).' });
+  let filtroFecha = "";
+  let filtroIdCliente = "";
+
+  if (id) {
+    // Asegurarse de que el ID esté presente en la consulta
+    filtroIdCliente = `AND hc.clientes_id_cliente = ${id}`;
+  }
+
+  switch (tipo) {
+    case "dia":
+      filtroFecha = "CAST(hc.fecha AS DATE) = CAST(GETDATE() AS DATE)";
+      break;
+    case "semana":
+      filtroFecha = "DATEPART(WEEK, hc.fecha) = DATEPART(WEEK, GETDATE()) AND YEAR(hc.fecha) = YEAR(GETDATE())";
+      break;
+    case "mes":
+      filtroFecha = "MONTH(hc.fecha) = MONTH(GETDATE()) AND YEAR(hc.fecha) = YEAR(GETDATE())";
+      break;
+    default:
+      filtroFecha = "1=1"; // sin filtro si no se especifica tipo
   }
 
   try {
     const pool = await poolPromise;
-    let sqlQuery;
-
-    if (query === 'diarias') {
-      // Reporte diario
-      sqlQuery = "SELECT * FROM facturas WHERE fecha = CAST(GETDATE() AS DATE)";
-    } else if (query === 'semanales') {
-      // Reporte semanal
-      sqlQuery = `
-        SELECT * FROM facturas
-        WHERE fecha >= CAST(DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()), 0) AS DATE)
-        AND fecha <= CAST(DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()), 6) AS DATE)
-      `;
-    } else if (query === 'mensual') {
-      // Reporte mensual
-      sqlQuery = `
-        SELECT * FROM facturas
-        WHERE YEAR(fecha) = YEAR(GETDATE()) AND MONTH(fecha) = MONTH(GETDATE())
-      `;
-    } else {
-      return res.status(400).json({ error: 'Query no válido. Usa "diarias", "semanales" o "mensual".' });
-    }
-
-    const result = await pool.request().query(sqlQuery);
-    res.json(result.recordset);  // Devolver los resultados en formato JSON
-
+    const result = await pool.request().query(`
+      SELECT hc.*, c.nombre AS nombre_cliente
+      FROM historialCompras_clientes hc
+      INNER JOIN clientes c ON hc.clientes_id_cliente = c.id_cliente
+      WHERE ${filtroFecha} ${filtroIdCliente}
+    `);
+    res.json(result.recordset);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { getReporte };
+module.exports = {
+  getHistorialCompras,
+};
