@@ -18,7 +18,12 @@ const getFacturaById = async (req, res) => {
 
         const productos = await pool.request()
             .input("id", id)
-            .query(`SELECT * FROM detalles_facturas
+            .query(`
+                SELECT         
+                    detalles_facturas.*, 
+                    p.nombre
+                FROM detalles_facturas
+                INNER JOIN productos p ON detalles_facturas.productos_id_producto = p.id_producto
                 WHERE facturas_id_factura = @id
                 `);
 
