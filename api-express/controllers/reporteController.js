@@ -41,6 +41,28 @@ const getHistorialCompras = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 module.exports = {
   getHistorialCompras,
 };
+=======
+const getReporteProductos = async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const sqlQuery = `
+      SELECT 
+        p.nombre AS nombre_producto, 
+        SUM(d.cantidad) AS total_vendido
+      FROM productos p
+      JOIN detalles_facturas d ON p.id_producto = d.productos_id_producto
+      GROUP BY p.nombre
+    `;
+    const result = await pool.request().query(sqlQuery);
+    res.json(result.recordset);  // Devolver los resultados en formato JSON
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+module.exports = { getReporte, getReporteProductos };
+>>>>>>> 25bcb9033499242073a954aa8ac207799080aff5
