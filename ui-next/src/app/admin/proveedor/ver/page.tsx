@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Header from "../../components/Header";
+import Header from "../../../components/Header";
 
 const initialProveedores = [
     { id: 1, nombre: "Herramientas Suarez S.A", correo: "contacto@suarez.com", telefono: "123456789", direccion: "Av. Libertador 123", tipoHerramienta: "Manual" },

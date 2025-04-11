@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Header from "../../components/Header";
+import Header from "../../../components/Header";
 
 export default function Page() {
     const clienteRef = useRef<HTMLSelectElement>(null);
