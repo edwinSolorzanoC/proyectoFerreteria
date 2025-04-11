@@ -4,6 +4,23 @@ const createVenta = async (req, res) => {
     try {
         const { id_cliente, productos, total } = req.body;
         const pool = await poolPromise;
+
+        // validar stock de productos
+        for (const producto of productos) {
+            const { id_producto, cantidad } = producto;
+            const result = await pool.request()
+                .input("id_producto", id_producto)
+                .query(`
+                    SELECT cantidad_stock, nombre FROM productos 
+                    WHERE id_producto = @id_producto
+                    `);
+            const stock = result.recordset[0].cantidad_stock;
+            const nombre = result.recordset[0].nombre;
+            if (stock < cantidad) {
+                return res.status(400).json({ error: `El producto ${nombre} no tiene suficiente stock` });
+            }
+        }
+
         // Primero: Insertar la factura
         const facturaResult = await pool.request()
             .input("fecha", new Date())

@@ -40,7 +40,10 @@ export default function Header() {
 
         <nav className="flex items-center space-x-4 relative">
           {!isLoading && (
-            <Link href={!isLoading && user ? "/" : "/api/auth/login" } className="hover:text-gray-300">
+            <Link
+              href={!isLoading && user ? "/" : "/api/auth/login"}
+              className="hover:text-gray-300"
+            >
               {!isLoading && user ? "Inicio" : "Login"}
             </Link>
           )}
@@ -177,17 +180,17 @@ export default function Header() {
                 {openDropdown === "estadisticas" && (
                   <div className="absolute z-10 left-0 mt-2 w-48 bg-white shadow-lg rounded-lg text-black">
                     <Link
-                      href="/admin/estadisticas/ventas"
+                      href="/admin/estadisticas/reportes"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
-                      por_terminar_1
+                      Reporte Ventas
                     </Link>
                     <Link
-                      href="/admin/estadisticas/inventario"
+                      href="/admin/estadisticas/analisis"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
-                      por_terminar_2
-                    </Link>
+                      Analisis
+                    </Link>{" "}
                   </div>
                 )}
               </div>
