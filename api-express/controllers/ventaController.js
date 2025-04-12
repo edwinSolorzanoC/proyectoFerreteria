@@ -1,4 +1,5 @@
 const { poolPromise } = require("../db/config");
+const { createOrden, getOrdenByIdProducto } = require("../controllers/ordenController");
 
 const createVenta = async (req, res) => {
     try {
@@ -11,11 +12,21 @@ const createVenta = async (req, res) => {
             const result = await pool.request()
                 .input("id_producto", id_producto)
                 .query(`
-                    SELECT cantidad_stock, nombre FROM productos 
+                    SELECT cantidad_stock, nombre, stock_minimo, id_proveedor  FROM productos 
                     WHERE id_producto = @id_producto
                     `);
             const stock = result.recordset[0].cantidad_stock;
             const nombre = result.recordset[0].nombre;
+            const minimo = result.recordset[0].stock_minimo;
+            const id_proveedor = result.recordset[0].id_proveedor;
+            
+            if (stock <= minimo && !await getOrdenByIdProducto({ body: { productos_id_producto: id_producto } })) {
+                //generar orden de compra
+                await createOrden({ body: { ...producto, cantidad: minimo, proveedores_id_proveedor: id_proveedor, productos_id_producto: id_producto } });
+            }
+
+
+            // Si el stock es menor que la cantidad solicitada, devolver un error
             if (stock < cantidad) {
                 return res.status(400).json({ error: `El producto ${nombre} no tiene suficiente stock` });
             }

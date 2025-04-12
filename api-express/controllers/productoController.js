@@ -38,10 +38,11 @@ const addProducto = async (req, res) => {
       .input('nombre', nombre)
       .input('precio', precio)
       .input('cantidad_stock', cantidad_stock)
+      .input('stock_minimo', stock_minimo)
       .input('id_proveedor', id_proveedor)
       .query(`
-        INSERT INTO productos (nombre, precio, cantidad_stock, id_proveedor)
-        VALUES (@nombre, @precio, @cantidad_stock, @id_proveedor);
+        INSERT INTO productos (nombre, precio, cantidad_stock, stock_minimo, id_proveedor)
+        VALUES (@nombre, @precio, @cantidad_stock, @stock_minimo, @id_proveedor);
       `);
 
     res.status(201).json({ message: "Producto agregado correctamente." });
@@ -107,12 +108,14 @@ const updateProducto = async (req, res) => {
       .input('nombre', nombre)
       .input('precio', precio)
       .input('cantidad_stock', cantidad_stock)
+      .input('stock_minimo', stock_minimo)
       .input('id_proveedor', id_proveedor)
       .query(`
         UPDATE productos
         SET nombre = @nombre,
             precio = @precio,
             cantidad_stock = @cantidad_stock,
+            stock_minimo = @stock_minimo,
             id_proveedor = @id_proveedor
         WHERE id_producto = @id_producto;
       `);
