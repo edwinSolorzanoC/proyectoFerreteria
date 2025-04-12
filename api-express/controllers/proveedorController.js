@@ -31,10 +31,10 @@ const addProveedor = async (req, res) => {
     }
 
     await pool.request()
-      .input('nombre', nombre)
-      .input('contacto', contacto)
-      .input('telefono', telefono)
-      .input('direccion', direccion)
+      .input('nombre', nombre) 
+      .input('contacto', contacto) 
+      .input('telefono', telefono) 
+      .input('direccion', direccion) 
       .query(`
         INSERT INTO proveedores (nombre, contacto, telefono, direccion)
         VALUES (@nombre, @contacto, @telefono, @direccion);

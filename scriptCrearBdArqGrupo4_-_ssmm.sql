@@ -1,5 +1,3 @@
-
-
 IF EXISTS (SELECT name FROM sys.databases WHERE name = 'Ferremax')
 BEGIN
   ALTER DATABASE Ferremax SET SINGLE_USER WITH ROLLBACK IMMEDIATE;

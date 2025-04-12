@@ -52,6 +52,7 @@ const getReporteProductos = async (req, res) => {
       FROM productos p
       JOIN detalles_facturas d ON p.id_producto = d.productos_id_producto
       GROUP BY p.nombre
+      ORDER BY total_vendido DESC
     `;
     const result = await pool.request().query(sqlQuery);
     res.json(result.recordset);  // Devolver los resultados en formato JSON
