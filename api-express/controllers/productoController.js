@@ -13,7 +13,7 @@ const getProductos = async (req, res) => {
 
 // Agregar un producto nuevo
 const addProducto = async (req, res) => {
-  const { nombre, precio, cantidad_stock, id_proveedor } = req.body;
+  const { nombre, precio, cantidad_stock, id_proveedor, stock_minimo  } = req.body;
 
   if (!nombre || !precio || !cantidad_stock || !id_proveedor) {
     return res.status(400).json({ error: "Nombre, precio, cantidad_stock y id_proveedor son requeridos." });
@@ -33,7 +33,6 @@ const addProducto = async (req, res) => {
     if (checkDuplicate.recordset[0].count > 0) {
       return res.status(400).json({ error: "Ya existe un producto con ese nombre." });
     }
-
     await pool.request()
       .input('nombre', nombre)
       .input('precio', precio)
