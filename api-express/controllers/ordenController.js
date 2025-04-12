@@ -3,7 +3,11 @@ const { poolPromise } = require('../db/config');
 const getAllOrdens = async (req, res) => {
     try {
         const pool = await poolPromise;
-        const result = await pool.request().query(`SELECT * FROM ordenesDeCompra`);
+        const result = await pool.request()
+        .query(`SELECT oc.*, p.nombre as nombre_producto, pv.nombre as nombre_proveedor FROM ordenesDeCompra oc
+                INNER JOIN productos p ON oc.productos_id_producto = p.id_producto
+                INNER JOIN proveedores pv ON oc.proveedores_id_proveedor = pv.id_proveedor
+            `);
         res.status(200).json(result.recordset);
     } catch (error) {
         res.status(500).json({ error: error.message });
