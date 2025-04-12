@@ -13,7 +13,7 @@ const getProductos = async (req, res) => {
 
 // Agregar un producto nuevo
 const addProducto = async (req, res) => {
-  const { nombre, precio, cantidad_stock, id_proveedor, stock_minimo  } = req.body;
+  const { nombre, precio, cantidad_stock, id_proveedor,stock_minimo  } = req.body;
 
   if (!nombre || !precio || !cantidad_stock || !id_proveedor) {
     return res.status(400).json({ error: "Nombre, precio, cantidad_stock y id_proveedor son requeridos." });
@@ -81,7 +81,7 @@ const deleteProducto = async (req, res) => {
 
 // Actualizar producto
 const updateProducto = async (req, res) => {
-  const { id_producto, nombre, precio, cantidad_stock, id_proveedor } = req.body;
+  const { id_producto, nombre, precio, cantidad_stock, id_proveedor, stock_minimo } = req.body;
 
   if (!id_producto || !nombre || !precio || !cantidad_stock || !id_proveedor) {
     return res.status(400).json({ error: "id_producto, nombre, precio, cantidad_stock y id_proveedor son requeridos." });
