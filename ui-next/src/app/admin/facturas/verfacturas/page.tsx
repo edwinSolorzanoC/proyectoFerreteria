@@ -24,7 +24,6 @@ export default function VerFacturasPage() {
     }, [filtro, facturas]);
 
     const fetchFacturas = async () => {
-        // Reemplazar esta vara quemada con una llamada real
         const response = await fetch("http://localhost:5000/api/factura"); // Ajustar rutas
         const data = await response.json();
         const nData = data.map((factura: any) => ({

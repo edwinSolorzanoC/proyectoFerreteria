@@ -19,46 +19,16 @@ export default function Page() {
 
     // jalar los clientes desde el backend
     const fetchClientes = async () => {
-    //para reemplazar datos mock:
-        /*
-        try {
-            const res = await fetch("/api/clientes"); // ajustar ruta
-            if (!res.ok) throw new Error("Error al obtener clientes");
-            const data = await res.json();
-            setClientes(data);
-        } catch (error) {
-            console.error("Error al cargar clientes:", error);
-            alert("No se pudieron cargar los clientes");
-        }
-        */
-
-        // de momento para mostrar datos mockup:
-        setClientes([
-            { id_cliente: 1, nombre: "Carlos Pérez" },
-            { id_cliente: 2, nombre: "Ana Gómez" }
-        ]);
+        const response = await fetch("http://localhost:5000/api/clientes"); // Ajustar rutas
+        const data = await response.json();
+        setClientes(data);
     };
 
     //obtener los productos desde el back
     const fetchProductos = async () => {
-        // ara reemplazar datos mock:
-        /*
-        try {
-            const res = await fetch("/api/productos"); //Ajustar ruta
-            if (!res.ok) throw new Error("Error al obtener productos");
-            const data = await res.json();
-            setProductos(data);
-        } catch (error) {
-            console.error("Error al cargar productos:", error);
-            alert("No se pudieron cargar los productos");
-        }
-        */
-
-        // misma vara de momento para mostrar datos mockup:
-        setProductos([
-            { id_producto: 1, nombre: "Martillo", precio: 12.5 },
-            { id_producto: 2, nombre: "Taladro", precio: 45.0 }
-        ]);
+        const response = await fetch("http://localhost:5000/api/productos"); // Ajustar rutas
+        const data = await response.json();
+        setProductos(data);
     };
 
     const agregarProducto = () => {
@@ -102,7 +72,7 @@ export default function Page() {
         return totalConIVA.toFixed(2);
     };
 
-    const generarFactura = (e: React.FormEvent) => {
+    const generarFactura = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const id_cliente = clienteRef.current?.value;
@@ -118,20 +88,16 @@ export default function Page() {
             fecha,
             total: calcularTotal(),
             total_con_impuesto: calcularTotalConImpuesto(),
-            detalles: productosSeleccionados.map(p => ({
+            productos: productosSeleccionados.map(p => ({
                 id_producto: p.id_producto,
                 cantidad: p.cantidad,
                 precio_unitario: p.precio,
                 subtotal: p.subtotal
             }))
         };
-
         console.log("Factura generada:", factura);
-
-        // para un POST al back para registrar la factura:
-        /*
         try {
-            const res = await fetch("/api/facturas", { //Ajustar ruta
+            const res = await fetch("http://localhost:5000/api/ventas", { //Ajustar ruta
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -144,9 +110,6 @@ export default function Page() {
             console.error("Error al enviar la factura:", error);
             alert("No se pudo registrar la factura.");
         }
-        */
-
-        alert("Factura registrada exitosamente");
     };
 
     return (
