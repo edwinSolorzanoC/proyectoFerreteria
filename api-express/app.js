@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const clienteRoutes = require("./routes/clienteRoutes");
 const productoRoutes = require("./routes/productoRoutes"); // 👈 Nuevo
 const proveedorRoutes = require("./routes/proveedorRoutes");
@@ -9,7 +10,7 @@ const facturaRoute = require("./routes/facturaRoutes"); // 👈 Nuevo
 const ordenesRoute = require("./routes/ordenRoutes"); // 👈 Nuevo
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 // Rutas
