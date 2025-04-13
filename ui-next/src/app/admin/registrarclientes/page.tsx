@@ -18,15 +18,18 @@ export default function RegistrarCliente() {
         direccion: false
     });
 
+    // Validación de correo
     const validarCorreo = (correo: string) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
     };
 
+    // Validación de número telefónico en formato (+506) XXXX-XXXX
     const validarTelefono = (telefono: string) => {
         const regex = /^\(\+506\) \d{4}-\d{4}$/;
         return regex.test(telefono);
     };
 
+    // Actualización de formulario y validaciones
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         let nuevoValor = value;
@@ -61,17 +64,55 @@ export default function RegistrarCliente() {
         setIsValid({ ...isValid, [name]: isCampoValido });
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const telefonoFormateado = formData.telefono.replace("(+506) ", "506 ").replace("-", " ");
 
-        console.log("Cliente registrado:", {
-            ...formData,
-            telefono: telefonoFormateado
-        });
+        // Posible conecion al back
+        /*
+        try {
+            const response = await fetch("/api/clientes", { //Ajustar rutas
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nombre: formData.nombre,
+                    correo: formData.correo,
+                    telefono: telefonoFormateado,
+                    direccion: formData.direccion
+                })
+            });
 
-        alert("Cliente registrado exitosamente");
+            if (!response.ok) {
+                throw new Error("Error al registrar cliente");
+            }
+
+            const data = await response.json();
+            console.log("Cliente registrado:", data);
+
+            alert("Cliente registrado exitosamente");
+
+            // limpiar formulario
+            setFormData({
+                nombre: "",
+                correo: "",
+                telefono: "",
+                direccion: ""
+            });
+            setIsValid({
+                nombre: false,
+                correo: false,
+                telefono: false,
+                direccion: false
+            });
+
+        } catch (error) {
+            console.error("Error al conectar con el backend:", error);
+            alert("Hubo un error al registrar el cliente.");
+        }
+        */
     };
 
     const allValid = Object.values(isValid).every(Boolean);

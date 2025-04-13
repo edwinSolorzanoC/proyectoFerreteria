@@ -1,4 +1,4 @@
-
+//Esta se puede borrar creeria yo
 import Header from "../../../components/Header";
 
 const productos = [

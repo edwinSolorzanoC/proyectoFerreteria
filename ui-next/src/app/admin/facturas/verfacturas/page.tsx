@@ -11,7 +11,7 @@ export default function VerFacturasPage() {
     const [mostrarModal, setMostrarModal] = useState(false);
 
     useEffect(() => {
-        fetchFacturas();
+        fetchFacturas(); // Backend: Aquí se obtendrían las facturas desde una API real
     }, []);
 
     useEffect(() => {
@@ -24,6 +24,12 @@ export default function VerFacturasPage() {
     }, [filtro, facturas]);
 
     const fetchFacturas = async () => {
+        // Reemplazar esta vara quemada con una llamada real
+        // const response = await fetch("/api/facturas"); // Ajustar rutas
+        // const data = await response.json();
+        // setFacturas(data);
+        // setFiltradas(data);
+
         const datosSimulados = [
             {
                 id_factura: 1,

@@ -10,7 +10,6 @@ export default function Page() {
     const [productosSeleccionados, setProductosSeleccionados] = useState<any[]>([]);
     const productoRef = useRef<HTMLSelectElement>(null);
     const cantidadRef = useRef<HTMLInputElement>(null);
-
     const [clientes, setClientes] = useState<any[]>([]);
 
     useEffect(() => {
@@ -18,14 +17,44 @@ export default function Page() {
         fetchProductos();
     }, []);
 
+    // jalar los clientes desde el backend
     const fetchClientes = async () => {
+    //para reemplazar datos mock:
+        /*
+        try {
+            const res = await fetch("/api/clientes"); // ajustar ruta
+            if (!res.ok) throw new Error("Error al obtener clientes");
+            const data = await res.json();
+            setClientes(data);
+        } catch (error) {
+            console.error("Error al cargar clientes:", error);
+            alert("No se pudieron cargar los clientes");
+        }
+        */
+
+        // de momento para mostrar datos mockup:
         setClientes([
             { id_cliente: 1, nombre: "Carlos Pérez" },
             { id_cliente: 2, nombre: "Ana Gómez" }
         ]);
     };
 
+    //obtener los productos desde el back
     const fetchProductos = async () => {
+        // ara reemplazar datos mock:
+        /*
+        try {
+            const res = await fetch("/api/productos"); //Ajustar ruta
+            if (!res.ok) throw new Error("Error al obtener productos");
+            const data = await res.json();
+            setProductos(data);
+        } catch (error) {
+            console.error("Error al cargar productos:", error);
+            alert("No se pudieron cargar los productos");
+        }
+        */
+
+        // misma vara de momento para mostrar datos mockup:
         setProductos([
             { id_producto: 1, nombre: "Martillo", precio: 12.5 },
             { id_producto: 2, nombre: "Taladro", precio: 45.0 }
@@ -98,6 +127,25 @@ export default function Page() {
         };
 
         console.log("Factura generada:", factura);
+
+        // para un POST al back para registrar la factura:
+        /*
+        try {
+            const res = await fetch("/api/facturas", { //Ajustar ruta
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(factura),
+            });
+            if (!res.ok) throw new Error("Error al registrar factura");
+            alert("Factura registrada exitosamente");
+        } catch (error) {
+            console.error("Error al enviar la factura:", error);
+            alert("No se pudo registrar la factura.");
+        }
+        */
+
         alert("Factura registrada exitosamente");
     };
 

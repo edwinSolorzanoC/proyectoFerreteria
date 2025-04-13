@@ -25,7 +25,7 @@ export default function RegistrarProducto() {
         setIsValid(validarCampos());
     }, [nombre, precio, cantidad, proveedor]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!isValid) {
@@ -33,15 +33,43 @@ export default function RegistrarProducto() {
             return;
         }
 
-        console.log("Producto registrado:", {
+        const nuevoProducto = {
             nombre,
             precio: parseFloat(precio),
             cantidad: parseInt(cantidad),
             proveedor,
-        });
+        };
 
+        console.log("Producto registrado:", nuevoProducto);
         alert("Producto registrado con éxito");
-        // Resetear formulario si lo deseas
+
+//Conexion al back
+        /*
+        try {
+            const response = await fetch("http://localhost:3000/api/productos", { //Ajustar ruta
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(nuevoProducto),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al registrar el producto");
+            }
+
+            const data = await response.json();
+            console.log("Respuesta del servidor:", data);
+        } catch (error) {
+            console.error("Error al enviar producto:", error);
+        }
+        
+
+         Resetear formulario
+         setNombre("");
+         setPrecio("");
+         setCantidad("");
+         setProveedor("");*/
     };
 
     return (
@@ -116,59 +144,3 @@ export default function RegistrarProducto() {
         </>
     );
 }
-
-/*
-import Header from "../../components/Header";
-
-// pages/productos/registrar.tsx
-export default function RegistrarProducto() {
-    return (
-
-        <>
-        <Header />
-        
-        <div  className="container mx-auto p-6">
-        <h1 className="text-3xl font-semibold mb-6">Registrar Productos</h1>
-
-        <form className="space-y-4">
-            <div>
-                <label className="block text-withe-700 font-medium">Nombre</label>
-                <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Nombre producto"
-                />
-            </div>
-            <div>
-                <label className="block text-withe-700 font-medium">Precio</label>
-                <input
-                    type="number"
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Precio producto"
-                />
-            </div>
-            
-            <div>
-                <label className="block text-withe-700 font-medium">Selecciona el provedoor</label>
-                <select className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    <option className="text-black" value="">Elige una opción</option>
-                    <option className="text-black" value="opcion1">Proveedor 1</option>
-                    <option className="text-black" value="opcion2">Proveedor 2</option>
-                    <option className="text-black" value="opcion3">Proveedor 3</option>
-                </select>
-            </div>
-
-            <button
-            type="submit"
-            className="w-50 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-            Registrar
-            </button>
-        </form>
-
-     </div>
-
-        </>
-        
-    );
-  }
-  */
