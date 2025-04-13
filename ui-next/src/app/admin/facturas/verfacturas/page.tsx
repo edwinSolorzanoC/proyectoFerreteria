@@ -17,7 +17,7 @@ export default function VerFacturasPage() {
     useEffect(() => {
         const term = filtro.toLowerCase();
         const resultado = facturas.filter(f =>
-            f.cliente.nombre.toLowerCase().includes(term) ||
+            f.nombre.toLowerCase().includes(term) ||
             f.fecha.includes(term)
         );
         setFiltradas(resultado);
@@ -25,36 +25,20 @@ export default function VerFacturasPage() {
 
     const fetchFacturas = async () => {
         // Reemplazar esta vara quemada con una llamada real
-        // const response = await fetch("/api/facturas"); // Ajustar rutas
-        // const data = await response.json();
-        // setFacturas(data);
-        // setFiltradas(data);
-
-        const datosSimulados = [
-            {
-                id_factura: 1,
-                fecha: "2025-04-05",
-                total: "100.00",
-                total_con_impuesto: "113.00",
-                cliente: { id_cliente: 1, nombre: "Carlos Pérez" },
-                detalles: [
-                    { nombre: "Martillo", cantidad: 2, precio_unitario: 12.5, subtotal: 25.0 },
-                    { nombre: "Taladro", cantidad: 1, precio_unitario: 45.0, subtotal: 45.0 }
-                ]
-            },
-            {
-                id_factura: 2,
-                fecha: "2025-04-04",
-                total: "80.00",
-                total_con_impuesto: "90.40",
-                cliente: { id_cliente: 2, nombre: "Ana Gómez" },
-                detalles: [
-                    { nombre: "Taladro", cantidad: 2, precio_unitario: 45.0, subtotal: 90.0 }
-                ]
-            }
-        ];
-        setFacturas(datosSimulados);
-        setFiltradas(datosSimulados);
+        const response = await fetch("http://localhost:5000/api/factura"); // Ajustar rutas
+        const data = await response.json();
+        const nData = data.map((factura: any) => ({
+            ...factura,
+            total: factura.total.toFixed(2),
+            total_iva: (factura.total + 0.16 * factura.total).toFixed(2),
+            fecha: new Date(factura.fecha).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            }),
+        }));
+        setFacturas(nData);
+        setFiltradas(nData);
     };
 
     const abrirModal = (factura: any) => {
@@ -101,10 +85,10 @@ export default function VerFacturasPage() {
                             filtradas.map((factura) => (
                                 <tr key={factura.id_factura} className="border-t">
                                     <td className="p-2">{factura.id_factura}</td>
-                                    <td>{factura.cliente.nombre}</td>
+                                    <td>{factura.nombre}</td>
                                     <td>{factura.fecha}</td>
                                     <td>${factura.total}</td>
-                                    <td>${factura.total_con_impuesto}</td>
+                                    <td>${factura.total_iva}</td>
                                     <td>
                                         <button
                                             onClick={() => abrirModal(factura)}
@@ -132,7 +116,7 @@ export default function VerFacturasPage() {
                         </button>
 
                         <h2 className="text-2xl font-semibold mb-4">Detalles de Factura #{facturaSeleccionada.id_factura}</h2>
-                        <p><strong>Cliente:</strong> {facturaSeleccionada.cliente.nombre}</p>
+                        <p><strong>Cliente:</strong> {facturaSeleccionada.nombre}</p>
                         <p><strong>Fecha:</strong> {facturaSeleccionada.fecha}</p>
 
                         <h3 className="mt-4 font-semibold">Productos</h3>
@@ -148,7 +132,7 @@ export default function VerFacturasPage() {
                             <tbody>
                                 {facturaSeleccionada.detalles.map((item: any, index: number) => (
                                     <tr key={index} className="border-t">
-                                        <td className="p-2">{item.nombre}</td>
+                                        <td className="p-2">{item.nombre_producto}</td>
                                         <td>{item.cantidad}</td>
                                         <td>${item.precio_unitario.toFixed(2)}</td>
                                         <td>${item.subtotal.toFixed(2)}</td>
@@ -159,7 +143,7 @@ export default function VerFacturasPage() {
 
                         <div className="text-right font-semibold mt-4">
                             <p>Total: ${facturaSeleccionada.total}</p>
-                            <p>Total con IVA: ${facturaSeleccionada.total_con_impuesto}</p>
+                            <p>Total con IVA: ${facturaSeleccionada.total_iva}</p>
                         </div>
                     </div>
                 </div>
