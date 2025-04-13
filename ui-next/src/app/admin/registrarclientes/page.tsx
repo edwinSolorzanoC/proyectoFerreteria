@@ -4,6 +4,7 @@ import { useState } from "react";
 import Header from "../../components/Header";
 
 export default function RegistrarCliente() {
+    // Estado para almacenar los valores del formulario
     const [formData, setFormData] = useState({
         nombre: "",
         correo: "",
@@ -11,6 +12,7 @@ export default function RegistrarCliente() {
         direccion: ""
     });
 
+    // Estado para verificar si cada campo es válido
     const [isValid, setIsValid] = useState({
         nombre: false,
         correo: false,
@@ -18,37 +20,29 @@ export default function RegistrarCliente() {
         direccion: false
     });
 
-    // Validación de correo
+    // Validación básica de formato de correo electrónico
     const validarCorreo = (correo: string) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
     };
 
-    // Validación de número telefónico en formato (+506) XXXX-XXXX
+    // Validación para que el número tenga exactamente 8 dígitos
     const validarTelefono = (telefono: string) => {
-        const regex = /^\(\+506\) \d{4}-\d{4}$/;
-        return regex.test(telefono);
+        return /^\d{8}$/.test(telefono);
     };
 
-    // Actualización de formulario y validaciones
+    // Maneja el cambio de los inputs del formulario
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         let nuevoValor = value;
-
+        // Si el campo es teléfono, solo permite dígitos (hasta 8 caracteres)
         if (name === "telefono") {
-            // Formatear mientras escribe
-            nuevoValor = value.replace(/[^\d]/g, "");
-            if (nuevoValor.length > 8) nuevoValor = nuevoValor.slice(0, 8);
-            if (nuevoValor.length > 4) {
-                nuevoValor = `(+506) ${nuevoValor.slice(0, 4)}-${nuevoValor.slice(4)}`;
-            } else if (nuevoValor.length > 0) {
-                nuevoValor = `(+506) ${nuevoValor}`;
-            }
+            nuevoValor = value.replace(/[^\d]/g, "");// Elimina todo lo que no sea número
+            if (nuevoValor.length > 8) nuevoValor = nuevoValor.slice(0, 8);// Limita a 8 dígitos
         }
-
+        // Actualiza el valor del campo correspondiente
         const updatedForm = { ...formData, [name]: nuevoValor };
         setFormData(updatedForm);
-
-        // Validar campos individualmente
+        // Verifica si el campo actualizado es válido
         let isCampoValido = false;
         switch (name) {
             case "correo":
@@ -58,43 +52,33 @@ export default function RegistrarCliente() {
                 isCampoValido = validarTelefono(nuevoValor);
                 break;
             default:
-                isCampoValido = nuevoValor.trim().length > 0;
+                isCampoValido = nuevoValor.trim().length > 0; // Verifica que no esté vacío
         }
-
+        // Actualiza la validez del campo
         setIsValid({ ...isValid, [name]: isCampoValido });
     };
 
+    // Manejo el envío del formulario
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        e.preventDefault(); // Evita que se recargue la página
 
-        const telefonoFormateado = formData.telefono.replace("(+506) ", "506 ").replace("-", " ");
-
-        // Posible conecion al back
-        /*
         try {
-            const response = await fetch("/api/clientes", { //Ajustar rutas
+            const response = await fetch("http://localhost:5000/api/clientes", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    nombre: formData.nombre,
-                    correo: formData.correo,
-                    telefono: telefonoFormateado,
-                    direccion: formData.direccion
-                })
+                body: JSON.stringify(formData)
             });
 
             if (!response.ok) {
-                throw new Error("Error al registrar cliente");
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error al registrar el cliente.");
             }
 
-            const data = await response.json();
-            console.log("Cliente registrado:", data);
+            alert("Cliente registrado correctamente.");
 
-            alert("Cliente registrado exitosamente");
-
-            // limpiar formulario
+            // Reinicia el formulario después de enviar correctamente
             setFormData({
                 nombre: "",
                 correo: "",
@@ -107,16 +91,23 @@ export default function RegistrarCliente() {
                 telefono: false,
                 direccion: false
             });
-
-        } catch (error) {
-            console.error("Error al conectar con el backend:", error);
+        } catch (error: any) {
+            console.error("Error al enviar los datos:", error);
             alert("Hubo un error al registrar el cliente.");
         }
-        */
     };
 
+    // Verifica si todos los campos del formulario son válidos
     const allValid = Object.values(isValid).every(Boolean);
 
+    // Formatea el número de teléfono para mostrarlo con guion (XXXX-XXXX)
+    const formatearTelefonoParaVista = (telefono: string) => {
+        return telefono.length === 8
+            ? `${telefono.slice(0, 4)}-${telefono.slice(4)}`
+            : telefono;
+    };
+    
+    // GUI del formulario
     return (
         <>
             <Header />
@@ -154,12 +145,12 @@ export default function RegistrarCliente() {
                         <input
                             type="text"
                             name="telefono"
-                            value={formData.telefono}
+                            value={formatearTelefonoParaVista(formData.telefono)}
                             onChange={handleChange}
                             className={`w-full px-4 py-2 border rounded-lg focus:outline-none ${
                                 isValid.telefono ? "border-green-500" : "border-red-400"
                             }`}
-                            placeholder="(+506) XXXX-XXXX"
+                            placeholder="XXXX-XXXX"
                         />
                     </div>
                     <div>
