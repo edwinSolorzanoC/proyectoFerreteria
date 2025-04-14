@@ -22,7 +22,7 @@ const createVenta = async (req, res) => {
             
             if (stock <= minimo && !await getOrdenByIdProducto({ body: { productos_id_producto: id_producto } })) {
                 //generar orden de compra
-                await createOrden({ body: { ...producto, cantidad: minimo, proveedores_id_proveedor: id_proveedor, productos_id_producto: id_producto } });
+                await createOrden({ body: { ...producto, cantidad: minimo*2, proveedores_id_proveedor: id_proveedor, productos_id_producto: id_producto } });
             }
 
 

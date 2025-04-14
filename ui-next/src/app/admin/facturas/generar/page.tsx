@@ -21,6 +21,7 @@ export default function Page() {
     const fetchClientes = async () => {
         const response = await fetch("http://localhost:5000/api/clientes"); // Ajustar rutas
         const data = await response.json();
+        // console.log(data);
         setClientes(data);
     };
 
@@ -104,10 +105,13 @@ export default function Page() {
                 },
                 body: JSON.stringify(factura),
             });
-            if (!res.ok) throw new Error("Error al registrar factura");
+            if (!res.ok) {
+                const data = await res.json();
+                alert(data.error)
+                return;
+            }
             alert("Factura registrada exitosamente");
         } catch (error) {
-            console.error("Error al enviar la factura:", error);
             alert("No se pudo registrar la factura.");
         }
     };
@@ -154,7 +158,7 @@ export default function Page() {
                                 <option value="">Selecciona un producto</option>
                                 {productos.map(prod => (
                                     <option key={prod.id_producto} value={prod.id_producto}>
-                                        {prod.nombre} - ${prod.precio}
+                                        {prod.nombre} - ₡ {prod.precio}
                                     </option>
                                 ))}
                             </select>
@@ -196,15 +200,15 @@ export default function Page() {
                                         <tr key={index}>
                                             <td className="p-2">{p.nombre}</td>
                                             <td>{p.cantidad}</td>
-                                            <td>${p.precio.toFixed(2)}</td>
-                                            <td>${p.subtotal.toFixed(2)}</td>
+                                            <td>₡ {p.precio.toFixed(2)}</td>
+                                            <td>₡ {p.subtotal.toFixed(2)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                             <div className="text-right font-bold mt-2 space-y-1">
-                                <div>Total: ${calcularTotal()}</div>
-                                <div>Total con 13% IVA: ${calcularTotalConImpuesto()}</div>
+                                <div>Total: ₡ {calcularTotal()}</div>
+                                <div>Total con 13% IVA: ₡ {calcularTotalConImpuesto()}</div>
                             </div>
                         </>
                     )}

@@ -189,7 +189,7 @@ export default function Header() {
                       href="/admin/estadisticas/analisis"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
-                      Analisis
+                      Analisis Productos
                     </Link>{" "}
                   </div>
                 )}

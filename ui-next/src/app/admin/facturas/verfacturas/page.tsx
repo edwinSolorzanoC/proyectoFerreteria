@@ -86,8 +86,8 @@ export default function VerFacturasPage() {
                                     <td className="p-2">{factura.id_factura}</td>
                                     <td>{factura.nombre}</td>
                                     <td>{factura.fecha}</td>
-                                    <td>${factura.total}</td>
-                                    <td>${factura.total_iva}</td>
+                                    <td>₡  {factura.total}</td>
+                                    <td>₡  {factura.total_iva}</td>
                                     <td>
                                         <button
                                             onClick={() => abrirModal(factura)}
@@ -133,16 +133,16 @@ export default function VerFacturasPage() {
                                     <tr key={index} className="border-t">
                                         <td className="p-2">{item.nombre_producto}</td>
                                         <td>{item.cantidad}</td>
-                                        <td>${item.precio_unitario.toFixed(2)}</td>
-                                        <td>${item.subtotal.toFixed(2)}</td>
+                                        <td>₡ {item.precio_unitario.toFixed(2)}</td>
+                                        <td>₡ {item.subtotal.toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
 
                         <div className="text-right font-semibold mt-4">
-                            <p>Total: ${facturaSeleccionada.total}</p>
-                            <p>Total con IVA: ${facturaSeleccionada.total_iva}</p>
+                            <p>Total: ₡ {facturaSeleccionada.total}</p>
+                            <p>Total con IVA: ₡ {facturaSeleccionada.total_iva}</p>
                         </div>
                     </div>
                 </div>

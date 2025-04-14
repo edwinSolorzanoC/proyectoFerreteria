@@ -1,6 +1,5 @@
 
 "use client";
-
 import Header from "../../../components/Header";
 import { useEffect, useState } from 'react';
 
@@ -10,7 +9,7 @@ interface ReporteProducto {
 }
 
 export default function page(){
-    const [data, setData] = useState<ReporteProducto[]>([])
+    const [productos, setProductos] = useState<ReporteProducto[]>([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,7 +18,7 @@ export default function page(){
                 throw new Error("Error al obtener datos de análisis");
             }
             const data: ReporteProducto[] = await res.json();
-            setData(data);
+            setProductos(data);
         }
         fetchData()
     }, [])    
@@ -28,15 +27,26 @@ export default function page(){
 
         <>
         <Header/>
-        {
-            data.map((producto) => (
-                <div key={producto.nombre_producto} className="bg-gray-800 p-4 rounded-lg mb-4">
-                    <h2 className="text-xl font-bold text-white">{producto.nombre_producto}</h2>
-                    <p className="text-gray-400">Total vendido: {producto.total_vendido}</p>
-                </div>
-            ))
-        }
-        </>
+        <div className="container mx-auto p-6">
+            <h1 className="text-3xl font-semibold mb-6">Reporte  Productos mas vendidos</h1>
 
+            <table className="min-w-full table-auto border-collapse">
+                <thead className="text-white">
+                    <tr className="bg-blue-900">
+                        <th className="px-4 py-2 border text-center">Nombre producto</th>
+                        <th className="px-4 py-2 border text-center">Total vendido</th>
+                    </tr>
+                </thead>
+                <tbody className="bg-white">
+                    {productos.map((producto) => (
+                        <tr key={producto.nombre_producto} className="text-gray-700">
+                        <td className="text-center border px-4 py-2">{producto.nombre_producto}</td>
+                        <td className="text-center border px-4 py-2">{producto.total_vendido}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+        </>
     )
 }
