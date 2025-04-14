@@ -3,15 +3,9 @@ const { poolPromise } = require("../db/config");
 // Obtener historial de compras con filtro por día, semana, mes o por ID de cliente
 const getHistorialCompras = async (req, res) => {
   const { tipo } = req.query; // 'tipo' para dia, semana, mes
-  const { id } = req.params; // id del cliente desde la URL
 
   let filtroFecha = "";
   let filtroIdCliente = "";
-
-  if (id) {
-    // Asegurarse de que el ID esté presente en la consulta
-    filtroIdCliente = `AND hc.clientes_id_cliente = ${id}`;
-  }
 
   switch (tipo) {
     case "dia":
@@ -30,10 +24,11 @@ const getHistorialCompras = async (req, res) => {
   try {
     const pool = await poolPromise;
     const result = await pool.request().query(`
-      SELECT hc.*, c.nombre AS nombre_cliente
+      SELECT hc.*, c.nombre AS nombre_cliente, f.total
       FROM historialCompras_clientes hc
       INNER JOIN clientes c ON hc.clientes_id_cliente = c.id_cliente
-      WHERE ${filtroFecha} ${filtroIdCliente}
+      INNER JOIN facturas f ON f.id_factura = hc.factura_id_factura
+      WHERE ${filtroFecha}
     `);
     res.json(result.recordset);
   } catch (error) {

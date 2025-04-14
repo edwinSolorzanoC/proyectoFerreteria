@@ -6,7 +6,7 @@ const {  getReporteProductos,getHistorialCompras } = require("../controllers/rep
 const router = express.Router();
 
 
-router.get("/historial/:id", getHistorialCompras);
+router.get("/historial", getHistorialCompras);
 
 router.get('/productos', getReporteProductos);
 

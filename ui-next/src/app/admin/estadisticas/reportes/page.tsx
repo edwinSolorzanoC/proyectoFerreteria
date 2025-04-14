@@ -1,40 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../../components/Header";
 
 type Venta = {
-  id: number;
+    idhistorialCompras_clientes: number;
   fecha: string;
-  cantidadProductos: number;
+  nombre_cliente: string;
   total: number;
 };
 
 
 export default function page(){
 
-    const ventasDiarias: Venta[] = [
-        { id: 1, fecha: "11/03/2025", cantidadProductos: 150, total: 230000 },
-        { id: 1, fecha: "11/03/2025", cantidadProductos: 98, total: 189000 },
-    ];
+    const [ventasDiarias, setVentasDiarias] = useState<Venta[]>([])
+    const [ventasSemanales, setVentasSemanales] = useState<Venta[]>([])
+    const [ventasMensuales, setVentasMensuales] = useState<Venta[]>([])
 
-    const ventasSemanales: Venta[] = [
-        { id: 1, fecha: "09/02/2025", cantidadProductos: 4000, total: 1120000 },
-        { id: 1, fecha: "09/02/2025", cantidadProductos: 3800, total: 988000 },
-    ];
+    useEffect(() => {
+        fetcVentasDiarias();
+        fetcVentasSemanales();
+        fetcVentasMensuales();
+    }, [])
 
-    const ventasMensuales: Venta[] = [
-        { id: 1, fecha: "20/02/2025", cantidadProductos: 9000, total: 1400000 },
-        { id: 1, fecha: "20/02/2025", cantidadProductos: 7800, total: 1200300 },
-    ];
+    const fetcVentasDiarias = async () => {
+        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=dia"); // Ajustar rutas
+        const data = await response.json();
+        setVentasDiarias(data);
+    };
 
-    
+    const fetcVentasSemanales = async () => {
+        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=semana"); // Ajustar rutas
+        const data = await response.json();
+        setVentasSemanales(data);
+    };
+
+    const fetcVentasMensuales = async () => {
+        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=mes"); // Ajustar rutas
+        const data = await response.json();
+        setVentasMensuales(data);
+    };
+
     const [fechaSeleccionada, setFechaSeleccionada] = useState("");
     const fechaHoyDia = new Date();
     const anioHoyDia = fechaHoyDia.getFullYear();
     const mesHoyDia = String(fechaHoyDia.getMonth() + 1).padStart(2, "0"); // Mes es 0-indexado (0 = enero, 11 = diciembre)
     const diaHoyDia = String(fechaHoyDia.getDate()).padStart(2, "0"); // Asegura dos dígitos en el día
-    const maxFechaDia = `${anioHoyDia}-${mesHoyDia}-${diaHoyDia}`; // Formato YYYY-MM-DD
+    const maxFechaDia = `₡ {anioHoyDia}-₡ {mesHoyDia}-₡ {diaHoyDia}`; // Formato YYYY-MM-DD
 
 
     const [semanaSeleccionada, setSemanaSeleccionada] = useState("");
@@ -44,14 +56,14 @@ export default function page(){
     (fechaHoySemana.getDate() - fechaHoySemana.getDay() + 1) / 7
     ); // Obtener la semana del año, asumiendo que la semana empieza en lunes
 
-    const semanaHoyFormateada = `${anioHoySemana}-W${String(semanaHoySemana).padStart(2, "0")}`; // Formato YYYY-Www
+    const semanaHoyFormateada = `₡ {anioHoySemana}-W₡ {String(semanaHoySemana).padStart(2, "0")}`; // Formato YYYY-Www
     const maxSemana = semanaHoyFormateada;
 
     const [mesSeleccionado, setMesSeleccionado] = useState("");
     const fechaHoyMes = new Date();
     const anioHoyMes = fechaHoyMes.getFullYear();
     const mesHoyMes = String(fechaHoyMes.getMonth() + 1).padStart(2, "0"); // Mes es 0-indexado (0 = enero, 11 = diciembre)
-    const maxFechaMes = `${anioHoyMes}-${mesHoyMes}`; // Formato YYYY-MM
+    const maxFechaMes = `₡ {anioHoyMes}-₡ {mesHoyMes}`; // Formato YYYY-MM
 
 
     return(
@@ -87,16 +99,16 @@ export default function page(){
                 <thead className="text-white">
                     <tr className="bg-blue-900">
                         <th className="px-4 py-2 border text-center">Fecha</th>
-                        <th className="px-4 py-2 border text-center">Cantidad Productos</th>
+                        <th className="px-4 py-2 border text-center">Nombre Cliente</th>
                         <th className="px-4 py-2 border text-center">Precio Total</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white">
                     {ventasDiarias.map((venta) => (
-                        <tr key={venta.id} className="text-gray-700">
+                        <tr key={venta.idhistorialCompras_clientes} className="text-gray-700">
                         <td className="text-center border px-4 py-2">{venta.fecha}</td>
-                        <td className="text-center border px-4 py-2">{venta.cantidadProductos}</td>
-                        <td className="text-center border px-4 py-2">${venta.total.toLocaleString()}</td>
+                        <td className="text-center border px-4 py-2">{venta.nombre_cliente}</td>
+                        <td className="text-center border px-4 py-2">₡ {venta.total.toLocaleString()}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -128,17 +140,17 @@ export default function page(){
                 <thead className="text-white">
                     <tr className="bg-blue-900">
                         <th className="px-4 py-2 border text-center">Fecha</th>
-                        <th className="px-4 py-2 border text-center">Cantidad Productos</th>
+                        <th className="px-4 py-2 border text-center">Nombre Cliente</th>
                         <th className="px-4 py-2 border text-center">Precio Total</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white">
                     {ventasSemanales.map((venta) => (
-                        <tr key={venta.id} className="text-gray-700">
+                        <tr key={venta.idhistorialCompras_clientes} className="text-gray-700">
                         <td className="text-center border px-4 py-2">{venta.fecha}</td>
-                        <td className="text-center border px-4 py-2">{venta.cantidadProductos}</td>
-                        <td className="text-center border px-4 py-2">${venta.total.toLocaleString()}</td>
-                        </tr>
+                        <td className="text-center border px-4 py-2">{venta.nombre_cliente}</td>
+                        <td className="text-center border px-4 py-2">₡ {venta.total.toLocaleString()}</td>
+                        </tr> 
                     ))}
                 </tbody>
             </table>
@@ -174,16 +186,16 @@ export default function page(){
                 <thead className="text-white">
                     <tr className="bg-blue-900">
                         <th className="px-4 py-2 border text-center">Fecha</th>
-                        <th className="px-4 py-2 border text-center">Cantidad Productos</th>
+                        <th className="px-4 py-2 border text-center">Nombre Cliente</th>
                         <th className="px-4 py-2 border text-center">Precio Total</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white">
                     {ventasMensuales.map((venta) => (
-                        <tr key={venta.id} className="text-gray-700">
+                        <tr key={venta.idhistorialCompras_clientes} className="text-gray-700">
                         <td className="text-center border px-4 py-2">{venta.fecha}</td>
-                        <td className="text-center border px-4 py-2">{venta.cantidadProductos}</td>
-                        <td className="text-center border px-4 py-2">${venta.total.toLocaleString()}</td>
+                        <td className="text-center border px-4 py-2">{venta.nombre_cliente}</td>
+                        <td className="text-center border px-4 py-2">₡ {venta.total.toLocaleString()}</td>
                         </tr>
                     ))}
                 </tbody>
