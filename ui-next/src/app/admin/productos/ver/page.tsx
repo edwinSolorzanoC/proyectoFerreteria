@@ -26,7 +26,7 @@ export default function VerProducto() {
       .then((response) => response.json())
       .then((data) => {
         const datos = Array.isArray(data) ? data : [data];
-        
+
         const productosConEstado = datos.map((p) => ({
           ...p,
           desactivado: false,
@@ -54,29 +54,52 @@ export default function VerProducto() {
       alert("Precio y cantidad deben ser valores numéricos válidos.");
       return;
     }
-
-    setProductos((prev) =>
-      prev.map((p) =>
-        p.id_producto === id
-          ? {
-              ...p,
-              precio: parseFloat(editValues.precio),
-              cantidad_stock: parseInt(editValues.cantidad),
-            }
-          : p
-      )
+    const updatedProductos = productos.map((p) =>
+      p.id_producto === id
+        ? {
+            ...p,
+            precio: parseFloat(editValues.precio),
+            cantidad_stock: parseInt(editValues.cantidad),
+          }
+        : p
     );
+    setProductos(updatedProductos);
+
+    const productoActualizado = updatedProductos.find((p) => p.id_producto === id);
+    await handleUpdate(productoActualizado);
     setEditandoId(null);
   };
 
+  const handleUpdate = async (producto: ProductoApi | undefined) => {
+    if (!producto) return;
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/productos`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...producto,
+            precio: producto.precio,
+            cantidad_stock: producto.cantidad_stock,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al actualizar el producto");
+      }
+    } catch (error) {
+      console.error("Error al actualizar el producto:", error);
+    }
+  }
+
   const handleDesactivar = async (id: number) => {
     setProductos((prev) =>
-      prev.map((p) =>
-        p.id_producto === id ? { ...p, desactivado: true } : p
-      )
-    );
+      prev.map((p) => (p.id_producto === id ? { ...p, desactivado: true } : p))
+    ); 
   };
-
   const activos = productos.filter((p) => !p.desactivado);
   const desactivados = productos.filter((p) => p.desactivado);
 
@@ -107,7 +130,9 @@ export default function VerProducto() {
                   producto.desactivado ? "text-gray-500 underline" : ""
                 }`}
               >
-                <td className="text-center border px-4 py-2">{producto.nombre}</td>
+                <td className="text-center border px-4 py-2">
+                  {producto.nombre}
+                </td>
                 <td className="text-center border px-4 py-2">
                   {editandoId === producto.id_producto ? (
                     <input
