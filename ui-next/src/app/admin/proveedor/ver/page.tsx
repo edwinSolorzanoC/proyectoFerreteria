@@ -42,8 +42,39 @@ export default function VerProveedor() {
       p.id_proveedor === editandoId ? (datosEditados as Proveedores) : p
     );
     setProveedores(nuevosProveedores);
+
+    const provedorEditado = nuevosProveedores.find((p) => p.id_proveedor === editandoId);
+    handleUpdate(provedorEditado)
     setEditandoId(null);
   };
+
+  const handleUpdate = async (proveedor: Proveedores | undefined) => {
+    if (!proveedor) return;
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/proveedores`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...proveedor,
+            nombre: proveedor.nombre,
+            contacto: proveedor.contacto,
+            telefono: proveedor.telefono,
+            direccion: proveedor.direccion,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al actualizar el producto");
+      }
+    } catch (error) {
+      console.error("Error al actualizar el producto:", error);
+    }
+  }
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
