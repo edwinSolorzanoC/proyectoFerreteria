@@ -209,16 +209,16 @@ export default function Header() {
                 {openDropdown === "ordenes" && (
                   <div className="absolute z-10 left-0 mt-2 w-48 bg-white shadow-lg rounded-lg text-black">
                     <Link
-                      href="/admin/ordenes/pendientes"
+                      href="/admin/ordenes/automatizacion"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
-                      por_terminar_1
+                      Automatización
                     </Link>
                     <Link
-                      href="/admin/ordenes/historial"
+                      href="/admin/ordenes/actualizacion"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
-                      por_terminar_2
+                      Actualización - Por Terminar
                     </Link>
                   </div>
                 )}
