@@ -214,12 +214,6 @@ export default function Header() {
                     >
                       Automatización
                     </Link>
-                    <Link
-                      href="/admin/ordenes/actualizacion"
-                      className="block px-4 py-2 hover:bg-gray-100"
-                    >
-                      Actualización - Por Terminar
-                    </Link>
                   </div>
                 )}
               </div>
