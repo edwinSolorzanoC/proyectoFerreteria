@@ -16,28 +16,33 @@ export default function page(){
     const [ventasDiarias, setVentasDiarias] = useState<Venta[]>([])
     const [ventasSemanales, setVentasSemanales] = useState<Venta[]>([])
     const [ventasMensuales, setVentasMensuales] = useState<Venta[]>([])
-
     useEffect(() => {
-        fetcVentasDiarias();
-        fetcVentasSemanales();
-        fetcVentasMensuales();
+        fetchVentasDiarias();
+        fetchVentasSemanales();
+        fetchVentasMensuales();
     }, [])
-
-    const fetcVentasDiarias = async () => {
-        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=dia"); // Ajustar rutas
+    
+    const fetchVentasDiarias = async () => {
+        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=dia");
         const data = await response.json();
+    
+        if (!response.ok) return;
         setVentasDiarias(data);
     };
-
-    const fetcVentasSemanales = async () => {
-        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=semana"); // Ajustar rutas
+    
+    const fetchVentasSemanales = async () => {
+        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=semana");
         const data = await response.json();
+    
+        if (!response.ok) return;
         setVentasSemanales(data);
     };
-
-    const fetcVentasMensuales = async () => {
-        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=mes"); // Ajustar rutas
+    
+    const fetchVentasMensuales = async () => {
+        const response = await fetch("http://localhost:5000/api/reportes/historial?tipo=mes");
         const data = await response.json();
+    
+        if (!response.ok) return;
         setVentasMensuales(data);
     };
 
@@ -145,6 +150,7 @@ export default function page(){
                     </tr>
                 </thead>
                 <tbody className="bg-white">
+
                     {ventasSemanales.map((venta) => (
                         <tr key={venta.idhistorialCompras_clientes} className="text-gray-700">
                         <td className="text-center border px-4 py-2">{venta.fecha}</td>
@@ -152,6 +158,8 @@ export default function page(){
                         <td className="text-center border px-4 py-2">₡ {venta.total.toLocaleString()}</td>
                         </tr> 
                     ))}
+
+                    
                 </tbody>
             </table>
 
